@@ -11,6 +11,7 @@ func main() {
 
 	for game.Running() {
 		game.HandleEvent()
+		game.Update()
 		game.Render()
 	}
 }

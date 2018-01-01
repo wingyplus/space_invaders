@@ -11,7 +11,14 @@ type Game struct {
 	window   *sdl.Window
 	renderer *sdl.Renderer
 
+	width, height int
+
 	running bool
+
+	lastTimeElasped uint32
+	dt              uint32
+
+	invaders *InvaderContainer
 }
 
 func (g *Game) Running() bool {
@@ -20,11 +27,13 @@ func (g *Game) Running() bool {
 
 // Init everything that used in this game.
 func (g *Game) Init() {
+	g.width, g.height = 800, 600
+
 	if err := sdl.Init(sdl.INIT_VIDEO); err != nil {
 		panic(err)
 	}
 
-	window, err := sdl.CreateWindow("Space Invaders", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED, 800, 600, sdl.WINDOW_SHOWN)
+	window, err := sdl.CreateWindow("Space Invaders", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED, g.width, g.height, sdl.WINDOW_SHOWN)
 	if err != nil {
 		panic(err)
 	}
@@ -38,10 +47,45 @@ func (g *Game) Init() {
 	g.renderer = renderer
 
 	g.running = true
+
+	g.invaders = &InvaderContainer{
+		Grid: [][]*Invader{
+			{A(10, 10), A(60, 10), A(110, 10), A(160, 10), A(210, 10)},
+		},
+		Game: g,
+	}
+
+	// initialize delta time
+	g.calculateDeltaTime()
 }
 
+func (g *Game) Width() int {
+	return g.width
+}
+
+// Update all the component tree and re-calculate delta time in each frame
+func (g *Game) Update() {
+	g.invaders.Update(g.dt)
+	g.calculateDeltaTime()
+}
+
+func (g *Game) calculateDeltaTime() {
+	ticks := sdl.GetTicks()
+	log.Println("deltaTime", g.dt)
+	log.Println("ticks", ticks)
+	g.dt = ticks - g.lastTimeElasped
+	g.lastTimeElasped = ticks
+}
+
+// Render all of graphics in nodes
 func (g *Game) Render() {
 	drawBackgroundColor(g.renderer, color.Black)
+
+	// draw an aliens
+	g.invaders.Render(g.renderer)
+
+	// display to screen
+	g.renderer.Present()
 }
 
 func (g *Game) HandleEvent() {
@@ -72,5 +116,4 @@ func drawBackgroundColor(renderer *sdl.Renderer, color color.Color) {
 		log.Fatal(err)
 	}
 	renderer.Clear()
-	renderer.Present()
 }
