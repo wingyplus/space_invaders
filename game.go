@@ -48,12 +48,12 @@ func (g *Game) Init() {
 
 	g.running = true
 
-	g.invaders = &InvaderContainer{
-		Grid: [][]*Invader{
-			{A(10, 10), A(60, 10), A(110, 10), A(160, 10), A(210, 10)},
+	g.invaders = NewInvaderContainer(
+		g,
+		[][]*Invader{
+			{A(), A(), A(), A(), A(), A(), A(), A(), A(), A(), A()},
 		},
-		Game: g,
-	}
+	)
 
 	// initialize delta time
 	g.calculateDeltaTime()
