@@ -51,7 +51,7 @@ func (g *Game) Init() {
 	g.invaders = NewInvaderContainer(
 		g,
 		[][]*Invader{
-			{A(), A(), A(), A(), A(), A(), A(), A(), A(), A(), A()},
+			{A(), A(), A(), A(), A(), A(), B(), B(), A(), A(), A()},
 		},
 	)
 

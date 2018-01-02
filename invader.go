@@ -116,7 +116,13 @@ func (invader *Invader) Y() int32 {
 }
 
 func (invader *Invader) Render(renderer *sdl.Renderer) {
-	renderer.SetDrawColor(255, 0, 0, 1)
+	switch invader.t {
+	case TypeA:
+		renderer.SetDrawColor(255, 0, 0, 1)
+	case TypeB:
+		renderer.SetDrawColor(0, 255, 0, 1)
+	}
+
 	rect := sdl.Rect{
 		X: invader.x,
 		Y: invader.y,
@@ -136,11 +142,19 @@ func (invader *Invader) Render(renderer *sdl.Renderer) {
 	renderer.DrawRect(&rect)
 }
 
-func A() *Invader {
+func NewInvader(t InvaderType) *Invader {
 	return &Invader{
-		t:         TypeA,
+		t:         t,
 		width:     32,
 		height:    32,
 		direction: Right,
 	}
+}
+
+func A() *Invader {
+	return NewInvader(TypeA)
+}
+
+func B() *Invader {
+	return NewInvader(TypeB)
 }
