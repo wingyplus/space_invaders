@@ -29,6 +29,7 @@ func (container *InvaderContainer) Update(dt uint32) {
 	for i := 0; i < len(container.Grid); i++ { // row
 		for j := 0; j < len(container.Grid[i]); j++ { // column
 			invader := container.Grid[i][j]
+			// TODO: cleanup calculation movement.
 			x, y := container.x+padding+((invader.width+space)*int32(j)), container.y+10
 			invader.SetPos(x, y)
 		}
@@ -99,8 +100,6 @@ type Invader struct {
 	x, y          int32
 	t             InvaderType
 	width, height int32
-
-	direction MoveDirection
 }
 
 func (invader *Invader) SetPos(x, y int32) {
@@ -123,31 +122,19 @@ func (invader *Invader) Render(renderer *sdl.Renderer) {
 		renderer.SetDrawColor(0, 255, 0, 1)
 	}
 
-	rect := sdl.Rect{
+	renderer.DrawRect(&sdl.Rect{
 		X: invader.x,
 		Y: invader.y,
 		W: invader.width,
 		H: invader.height,
-	}
-
-	switch invader.direction {
-	case Right:
-		invader.x += 10
-		rect.X = invader.x
-	case DownThenLeft:
-		invader.y += 10
-		rect.Y = invader.y
-	}
-
-	renderer.DrawRect(&rect)
+	})
 }
 
 func NewInvader(t InvaderType) *Invader {
 	return &Invader{
-		t:         t,
-		width:     32,
-		height:    32,
-		direction: Right,
+		t:      t,
+		width:  32,
+		height: 32,
 	}
 }
 
