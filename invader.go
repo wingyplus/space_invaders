@@ -44,7 +44,7 @@ func (container *InvaderContainer) Update(dt uint32) {
 			container.direction = DownThenLeft
 		}
 	case Left:
-		if int(container.x) > container.Game.Width() {
+		if int(container.x) > 0 {
 			container.x -= 10
 		} else {
 			container.direction = DownThenRight
