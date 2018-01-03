@@ -38,7 +38,7 @@ func (container *InvaderContainer) Update(dt uint32) {
 	switch container.direction {
 	case Right:
 		// TODO: refactor this calculation, it's look hard to understand
-		if int(container.x+padding+((invaderWidth+space)*11)+10) < container.Game.Width() {
+		if int32(container.x+padding+((invaderWidth+space)*11)+10) < container.Game.Width() {
 			// move to the right side
 			container.x += 10
 		} else {

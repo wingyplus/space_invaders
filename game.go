@@ -11,7 +11,7 @@ type Game struct {
 	window   *sdl.Window
 	renderer *sdl.Renderer
 
-	width, height int
+	width, height int32
 
 	running bool
 
@@ -59,7 +59,7 @@ func (g *Game) Init() {
 	g.calculateDeltaTime()
 }
 
-func (g *Game) Width() int {
+func (g *Game) Width() int32 {
 	return g.width
 }
 
