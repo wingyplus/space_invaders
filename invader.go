@@ -19,8 +19,9 @@ type InvaderContainer struct {
 	Game *Game
 
 	// begin position of grid
-	x, y      int32
-	direction MoveDirection
+	x, y             int32
+	xoffset, yoffset int32
+	direction        MoveDirection
 }
 
 // Update detect grid position and decide should be move next.
@@ -32,13 +33,16 @@ func (container *InvaderContainer) Update(dt uint32) {
 			// TODO: cleanup calculation movement.
 			x, y := container.x+padding+((invader.width+space)*int32(j)), container.y+10
 			invader.SetPos(x, y)
+
+			if j == len(container.Grid[i])-1 {
+				container.xoffset = invader.X() + invaderWidth + 10
+			}
 		}
 	}
 
 	switch container.direction {
 	case Right:
-		// TODO: refactor this calculation, it's look hard to understand
-		if int(container.x+padding+((invaderWidth+space)*11)+10) < container.Game.Width() {
+		if int(container.xoffset) < container.Game.Width() {
 			// move to the right side
 			container.x += 10
 		} else {
