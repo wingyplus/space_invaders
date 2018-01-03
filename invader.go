@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -22,11 +24,28 @@ type InvaderContainer struct {
 	x, y             int32
 	xoffset, yoffset int32
 	direction        MoveDirection
+
+	interval time.Duration
+}
+
+func (container *InvaderContainer) updateInterval(dt int64) {
+	container.interval += time.Duration(dt)
+}
+
+func (container *InvaderContainer) resetInterval() {
+	container.interval = 0
 }
 
 // Update detect grid position and decide should be move next.
-// TODO: find how to move it slowly.
-func (container *InvaderContainer) Update(dt uint32) {
+func (container *InvaderContainer) Update(dt int64) {
+	// move invaders every ~0.5 seconds
+	if container.interval <= 500*time.Millisecond {
+		container.updateInterval(dt)
+		return
+	}
+
+	container.resetInterval()
+
 	for i := 0; i < len(container.Grid); i++ { // row
 		for j := 0; j < len(container.Grid[i]); j++ { // column
 			invader := container.Grid[i][j]

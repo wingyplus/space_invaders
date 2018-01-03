@@ -3,6 +3,7 @@ package main
 import (
 	"image/color"
 	"log"
+	"time"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -15,8 +16,8 @@ type Game struct {
 
 	running bool
 
-	lastTimeElasped uint32
-	dt              uint32
+	lastTimeElasped int64
+	dt              int64
 
 	invaders *InvaderContainer
 }
@@ -70,9 +71,7 @@ func (g *Game) Update() {
 }
 
 func (g *Game) calculateDeltaTime() {
-	ticks := sdl.GetTicks()
-	log.Println("deltaTime", g.dt)
-	log.Println("ticks", ticks)
+	ticks := time.Now().UnixNano()
 	g.dt = ticks - g.lastTimeElasped
 	g.lastTimeElasped = ticks
 }
